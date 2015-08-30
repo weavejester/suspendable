@@ -13,7 +13,8 @@
   (start [component] (assoc component :state :started))
   (stop  [component] (assoc component :state :stopped))
   Suspendable
-  (suspend [component] (assoc component :state :suspended)))
+  (suspend [component]   (assoc component :state :suspended))
+  (resume  [component _] (assoc component :state :resumed)))
 
 (deftest test-suspend-or-stop
   (testing "stop"
@@ -31,3 +32,19 @@
                   :suspendable (->SuspendableComponent))))]
     (is (= (-> system :plain :state) :stopped))
     (is (= (-> system :suspendable :state) :suspended))))
+
+(deftest test-resume-or-start
+  (testing "start"
+    (let [component (->PlainComponent)]
+      (is (= (-> component (resume-or-start component) :state) :started))))
+  (testing "resume"
+    (let [component (->SuspendableComponent)]
+      (is (= (-> component (resume-or-start component) :state) :resumed)))))
+
+(deftest test-resume-or-start-system
+  (let [system  (component/system-map
+                 :plain (->PlainComponent)
+                 :suspendable (->SuspendableComponent))
+        system' (resume-or-start-system system system)]
+    (is (= (-> system' :plain :state) :started))
+    (is (= (-> system' :suspendable :state) :resumed))))
