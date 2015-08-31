@@ -33,9 +33,12 @@
     (is (= (-> system :suspendable :state) :suspended))))
 
 (deftest test-resume-system
-  (let [system  (component/system-map
-                 :plain (->PlainComponent)
-                 :suspendable (->SuspendableComponent))
-        system' (resume-system system system)]
-    (is (= (-> system' :plain :state) :started))
-    (is (= (-> system' :suspendable :state) :resumed))))
+  (let [system (component/system-map
+                :plain (->PlainComponent)
+                :suspendable (->SuspendableComponent))]
+    (is (= (-> (resume-system system system) :plain :state)
+           :started))
+    (is (= (-> (resume-system system system) :suspendable :state)
+           :resumed))
+    (is (= (-> (resume-system system (dissoc system :suspendable)) :suspendable :state)
+           :started))))

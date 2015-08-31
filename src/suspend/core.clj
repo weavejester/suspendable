@@ -19,7 +19,11 @@
    (component/update-system
     (reduce (fn [s k] (update-in s [k] vary-meta assoc ::key k)) system component-keys)
     component-keys
-    (fn [c] (resume c (get old-system (::key (meta c))))))))
+    (fn [component]
+      (let [key (-> component meta ::key)]
+        (if-let [old-component (get old-system key)]
+          (resume component old-component)
+          (component/start component)))))))
 
 (extend-protocol Suspendable
   Object
