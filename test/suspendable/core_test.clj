@@ -16,6 +16,11 @@
   (suspend [component]   (assoc component :state :suspended))
   (resume  [component _] (assoc component :state :resumed)))
 
+(defrecord StatefulComponent [state]
+  component/Lifecycle
+  (start [component] (reset! state :started) component)
+  (stop [component] (reset! state :stopped) component))
+
 (deftest test-default-suspend
   (is (= (-> (->PlainComponent) suspend :state) :stopped)))
 
@@ -34,11 +39,16 @@
 
 (deftest test-resume-system
   (let [system (component/system-map
-                :plain (->PlainComponent)
-                :suspendable (->SuspendableComponent))]
+                :plain       (->PlainComponent)
+                :suspendable (->SuspendableComponent)
+                :stateful    (->StatefulComponent (atom nil)))]
     (is (= (-> (resume-system system system) :plain :state)
            :started))
     (is (= (-> (resume-system system system) :suspendable :state)
            :resumed))
     (is (= (-> (resume-system system (dissoc system :suspendable)) :suspendable :state)
-           :started))))
+           :started))
+    (let [system (component/start system)]
+      (is (= (-> system :stateful :state deref) :started))
+      (resume-system (dissoc system :stateful) system)
+      (is (= (-> system :stateful :state deref) :stopped)))))
