@@ -1,6 +1,6 @@
-(ns suspend.core-test
+(ns suspendable.core-test
   (:require [clojure.test :refer :all]
-            [suspend.core :refer :all]
+            [suspendable.core :refer :all]
             [com.stuartsierra.component :as component]))
 
 (defrecord PlainComponent []

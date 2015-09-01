@@ -1,4 +1,4 @@
-(defproject suspend "0.1.0-SNAPSHOT"
+(defproject suspendable "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "The MIT License"

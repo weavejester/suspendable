@@ -1,4 +1,4 @@
-# Suspend
+# Suspendable
 
 A very small library that adds `suspend` and `resume` methods to
 [Component][].
@@ -23,7 +23,7 @@ that adds two new methods, `suspend` and `resume`, for facilitating a
 
 To install, add the following to your project `:dependencies`:
 
-    [suspend "0.1.0-SNAPSHOT"]
+    [suspendable "0.1.0-SNAPSHOT"]
 
 ## Usage
 

@@ -1,4 +1,4 @@
-(ns suspend.core
+(ns suspendable.core
   (:require [com.stuartsierra.component :as component])
   (:import [com.stuartsierra.component SystemMap]))
 
