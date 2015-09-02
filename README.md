@@ -33,7 +33,7 @@ with `suspend`, in functions that are used to handle a reset.
 ```clojure
 (ns user
   (:require [clojure.tools.namespace.repl :refer [refresh]]
-            [suspend.core :refer [suspend resume]]
+            [suspendable.core :refer [Suspendable suspend resume]]
             [your.app.system :refer [create-your-system]))
 
 (defn suspend []
@@ -69,7 +69,7 @@ port is the same.
       (do (close-connection connection)
           (dissoc component :connection))
       component))
-  suspend/Suspendable
+  Suspendable
   (suspend [component]
     component)
   (resume [component old-component]
