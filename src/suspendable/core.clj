@@ -1,12 +1,19 @@
 (ns suspendable.core
+  "A protocol and methods for allowing connections and other stateful objects
+  to persist in components across resets."
   (:require [com.stuartsierra.component :as component]
             [clojure.set :as set]))
 
 (defprotocol Suspendable
-  (suspend [component])
-  (resume [component old-component]))
+  (suspend [component]
+    "Suspend a component and return the suspended component. Expected to be
+    called before a resume.")
+  (resume [component old-component]
+    "Given a new component and a suspended old component, return a component
+    that incorporates the suspended data into the new component, if possible."))
 
 (defn suspend-system
+  "Suspend or stop every component in a system. Returns the suspended system."
   ([system]
    (suspend-system system (keys system)))
   ([system component-keys]
@@ -28,6 +35,9 @@
       (component/start component))))
 
 (defn resume-system
+  "Resume components in a new system using components from a previously
+  suspended system. Components that are not suspendable or that are missing from
+  the previous system are started instead. Returns the resumed system."
   ([system old-system]
    (resume-system system old-system (keys system)))
   ([system old-system component-keys]
