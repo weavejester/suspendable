@@ -1,5 +1,7 @@
 # Suspendable
 
+[![Build Status](https://travis-ci.org/weavejester/suspendable.svg?branch=master)](https://travis-ci.org/weavejester/suspendable)
+
 A very small library that adds `suspend` and `resume` methods to
 [Component][].
 
