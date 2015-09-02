@@ -11,8 +11,8 @@ A very small library that adds `suspend` and `resume` methods to
 
 In the [reloaded workflow][], each component is stopped completely
 before the codebase is refreshed. One problem with this approach is
-that it doesn't allow for connections to remain open during
-development.
+that it doesn't allow for connections held by components to persist
+during development.
 
 Ideally we want a way of carrying open connections across a refresh of
 the codebase. This library introduces a new protocol, `Suspendable`,
