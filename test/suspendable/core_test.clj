@@ -42,13 +42,20 @@
                 :plain       (->PlainComponent)
                 :suspendable (->SuspendableComponent)
                 :stateful    (->StatefulComponent (atom nil)))]
-    (is (= (-> (resume-system system system) :plain :state)
-           :started))
-    (is (= (-> (resume-system system system) :suspendable :state)
-           :resumed))
-    (is (= (-> (resume-system system (dissoc system :suspendable)) :suspendable :state)
-           :started))
-    (let [system (component/start system)]
-      (is (= (-> system :stateful :state deref) :started))
-      (resume-system (dissoc system :stateful) system)
-      (is (= (-> system :stateful :state deref) :stopped)))))
+    (testing "previous system"
+      (let [system (resume-system system system)]
+        (is (= (-> system :plain :state) :started))
+        (is (= (-> system :suspendable :state) :resumed))))
+    (testing "no previous system"
+      (let [system (resume-system system nil)]
+        (is (= (-> system :plain :state) :started))
+        (is (= (-> system :suspendable :state) :started))))
+    (testing "new component key"
+      (let [system (resume-system system (dissoc system :suspendable))]
+        (is (= (-> system :plain :state) :started))
+        (is (= (-> system :suspendable :state) :started))))
+    (testing "missing components are stopped"
+      (let [system (component/start system)]
+        (is (= (-> system :stateful :state deref) :started))
+        (resume-system (dissoc system :stateful) system)
+        (is (= (-> system :stateful :state deref) :stopped))))))
