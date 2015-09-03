@@ -25,7 +25,7 @@ that adds two new methods, `suspend` and `resume`, for facilitating a
 
 To install, add the following to your project `:dependencies`:
 
-    [suspendable "0.1.0-SNAPSHOT"]
+    [suspendable "0.1.0"]
 
 ## Usage
 
