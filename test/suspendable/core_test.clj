@@ -28,6 +28,15 @@
   (let [component (->PlainComponent)]
     (is (= (-> component (resume component) :state) :started))))
 
+(deftest test-components-that-arent-components
+  (let [system (component/start
+                (component/system-map
+                 :long 1
+                 :string "string"
+                 :false false))]
+    (is (suspend-system system))
+    (is (resume-system system system))))
+
 (deftest test-suspend-system
   (let [system (suspend-system
                 (component/start
