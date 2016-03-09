@@ -25,8 +25,13 @@
 (defn- stop-missing-components [old-system new-system]
   (component/update-system old-system (missing-keys old-system new-system) component/stop))
 
+(defn- maybe-vary-meta [obj f & args]
+  (if (instance? clojure.lang.IObj obj)
+    (apply vary-meta obj f args)
+    obj))
+
 (defn- assoc-component-key [system key]
-  (update-in system [key] vary-meta assoc ::key key))
+  (update-in system [key] maybe-vary-meta assoc ::key key))
 
 (defn- resume-system-component [old-system component]
   (let [key (-> component meta ::key)]
