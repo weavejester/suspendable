@@ -1,4 +1,4 @@
-(defproject suspendable "0.1.0"
+(defproject suspendable "0.1.1"
   :description "A library that adds suspend and resume methods to Component"
   :url "https://github.com/weavejester/suspendable"
   :license {:name "The MIT License"
