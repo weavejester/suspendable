@@ -5,6 +5,7 @@
             [clojure.set :as set]))
 
 (defprotocol Suspendable
+  :extend-via-metadata true
   (suspend [component]
     "Suspend a component and return the suspended component. Expected to be
     called before a resume.")
