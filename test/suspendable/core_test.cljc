@@ -1,6 +1,6 @@
 (ns suspendable.core-test
-  (:require [clojure.test :refer :all]
-            [suspendable.core :refer :all]
+  (:require [clojure.test :refer [deftest is testing]]
+            [suspendable.core :as core]
             [com.stuartsierra.component :as component]))
 
 (defrecord PlainComponent []
@@ -12,7 +12,7 @@
   component/Lifecycle
   (start [component] (assoc component :state :started))
   (stop  [component] (assoc component :state :stopped))
-  Suspendable
+  core/Suspendable
   (suspend [component]   (assoc component :state :suspended))
   (resume  [component _] (assoc component :state :resumed)))
 
@@ -22,11 +22,11 @@
   (stop [component] (reset! state :stopped) component))
 
 (deftest test-default-suspend
-  (is (= (-> (->PlainComponent) suspend :state) :stopped)))
+  (is (= (-> (->PlainComponent) core/suspend :state) :stopped)))
 
 (deftest test-default-resume
   (let [component (->PlainComponent)]
-    (is (= (-> component (resume component) :state) :started))))
+    (is (= (-> component (core/resume component) :state) :started))))
 
 (deftest test-components-that-arent-components
   (let [system (component/start
@@ -34,11 +34,11 @@
                  :long 1
                  :string "string"
                  :false false))]
-    (is (suspend-system system))
-    (is (resume-system system system))))
+    (is (core/suspend-system system))
+    (is (core/resume-system system system))))
 
 (deftest test-suspend-system
-  (let [system (suspend-system
+  (let [system (core/suspend-system
                 (component/start
                  (component/system-map
                   :plain (->PlainComponent)
@@ -52,19 +52,19 @@
                 :suspendable (->SuspendableComponent)
                 :stateful    (->StatefulComponent (atom nil)))]
     (testing "previous system"
-      (let [system (resume-system system system)]
+      (let [system (core/resume-system system system)]
         (is (= (-> system :plain :state) :started))
         (is (= (-> system :suspendable :state) :resumed))))
     (testing "no previous system"
-      (let [system (resume-system system nil)]
+      (let [system (core/resume-system system nil)]
         (is (= (-> system :plain :state) :started))
         (is (= (-> system :suspendable :state) :started))))
     (testing "new component key"
-      (let [system (resume-system system (dissoc system :suspendable))]
+      (let [system (core/resume-system system (dissoc system :suspendable))]
         (is (= (-> system :plain :state) :started))
         (is (= (-> system :suspendable :state) :started))))
     (testing "missing components are stopped"
       (let [system (component/start system)]
         (is (= (-> system :stateful :state deref) :started))
-        (resume-system (dissoc system :stateful) system)
+        (core/resume-system (dissoc system :stateful) system)
         (is (= (-> system :stateful :state deref) :stopped))))))
