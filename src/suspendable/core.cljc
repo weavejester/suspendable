@@ -27,7 +27,8 @@
   (component/update-system old-system (missing-keys old-system new-system) component/stop))
 
 (defn- maybe-vary-meta [obj f & args]
-  (if (instance? clojure.lang.IObj obj)
+  (if #?(:clj (instance? clojure.lang.IObj obj)
+         :cljs (satisfies? IMeta obj))
     (apply vary-meta obj f args)
     obj))
 
@@ -53,7 +54,7 @@
                               (partial resume-system-component old-system)))))
 
 (extend-protocol Suspendable
-  java.lang.Object
+  #?(:clj java.lang.Object :cljs default)
   (suspend [component] (component/stop component))
   (resume [component _] (component/start component))
   com.stuartsierra.component.SystemMap
