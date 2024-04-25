@@ -80,7 +80,7 @@ port is the same.
       (do (component/stop old-component)
           (component/start component)))
 ```
-      
+
 In the above case, `suspend` does nothing special, but in other
 components it could be used to delay incoming data until the component
 is resumed.
@@ -91,6 +91,6 @@ stop the old component and start the new component.
 
 ## License
 
-Copyright © 2016 James Reeves
+Copyright © 2024 James Reeves
 
 Distributed under the MIT License.
