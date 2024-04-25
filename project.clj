@@ -4,7 +4,7 @@
   :license {:name "The MIT License"
             :url "http://opensource.org/licenses/MIT"}
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [com.stuartsierra/component "0.4.0"]]
+                 [com.stuartsierra/component "1.1.0"]]
   :profiles {:provided {:dependencies [[org.clojure/clojurescript "1.10.597"]]}}
   :aliases {"test-cljs" ["with-profile" "provided" "run" "-m" "cljs.main" "-re" "node" "-e"
                          "(require '[clojure.test :as test])
